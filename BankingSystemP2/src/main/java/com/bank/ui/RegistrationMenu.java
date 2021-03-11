@@ -2,8 +2,12 @@ package com.bank.ui;
 
 import java.util.Scanner;
 
+import com.bank.dao.AccountInfoDao;
 import com.bank.exception.UserNameTaken;
+import com.bank.exception.UserNotFound;
+import com.bank.pojo.AccountInfo;
 import com.bank.pojo.User;
+import com.bank.service.AccountService;
 import com.bank.service.AuthService;
 
 public class RegistrationMenu implements Menu {
@@ -13,6 +17,7 @@ public class RegistrationMenu implements Menu {
 	private Scanner scan;
 	private AuthService authService;
 	private Menu loginMenu;
+	private AccountService accountService;
 
 	public RegistrationMenu() {
 
@@ -24,25 +29,44 @@ public class RegistrationMenu implements Menu {
 		return nextMenu;
 	}
 
+	public AccountService getAccountService() {
+		return accountService;
+	}
+
+	public void setAccountService(AccountService accountService) {
+		this.accountService = accountService;
+	}
+
 	@Override
 	public void displayOptions() {
 		// This will be displayed as the Registration Menu
 		User user = new User();
+		AccountInfo info = new AccountInfo();
+		
 		System.out.println("Enter your First Name:");
 		user.setFirstName(scan.nextLine());
+		
 		System.out.println("Enter your Last Name:");
 		user.setLastName(scan.nextLine());
+		
 		System.out.println("Enter a username:");
-		user.setUsername(scan.nextLine());
+		String uname= scan.nextLine();
+		user.setUsername(uname);
+		info.setUsername(uname);
+		
 		System.out.println("Enter a password");
 		user.setPassword(scan.nextLine());
 		if (!authService.existingUser(user)) {
 			try {
 				authService.registerUser(user);
+				accountService.registerAccount(info);
 				nextMenu = loginMenu;
 			}catch(UserNameTaken e) {
 				System.out.println("This is username is taken, please enter a different username");
 			nextMenu = welcomeMenu;
+			} catch (UserNotFound e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}else {
 			System.out.println("Username taken, try again");
@@ -102,11 +126,12 @@ public class RegistrationMenu implements Menu {
 
 	}
 
-	public RegistrationMenu(AuthService authService, Menu welcomeMenu, Menu loginMenu) {
+	public RegistrationMenu(AuthService authService, Menu welcomeMenu, Menu loginMenu,AccountService accountService) {
 		super();
 		this.welcomeMenu = welcomeMenu;
 		this.authService = authService;
 		this.loginMenu= loginMenu;
+		this.accountService=accountService;
 	}
 
 }

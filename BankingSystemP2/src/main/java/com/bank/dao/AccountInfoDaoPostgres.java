@@ -24,12 +24,14 @@ public class AccountInfoDaoPostgres implements AccountInfoDao {
 
 	@Override
 	public void depositInfo(AccountInfo info) throws UserNotFound {
-	
-		String sql = "insert into Account_info () values()";
+		System.out.println("depositInfo");
+		String sql = "update account_info set total = total + ? where username =?";
 		log.trace("Deposit has been made");
+
 		try {
 			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, info.getUsername());
+			stmt.setDouble(1, info.getTotalBalance());
+			stmt.setString(2, info.getUsername());
 			stmt.execute();
 			conn.close();
 		} catch (SQLException e) {
@@ -40,42 +42,45 @@ public class AccountInfoDaoPostgres implements AccountInfoDao {
 
 	@Override
 	public AccountInfo getInfo(String username) throws UserNotFound {
-	String sql = "select * from bank_user where username= ?";
-	User user =null;
-	try {
-		stmt=conn.prepareStatement(sql);
-		stmt.setString(1, username);
-		ResultSet rs = stmt.executeQuery();
-		while(rs.next()) {
-			log.info("User is present in DB");
-			user = new User();
-			user.setUsername(rs.getString("username"));
-			user.setFirstName(rs.getString("firstname"));
-			user.setLastName(rs.getString("lastname"));
-		}
-	}catch(SQLException e) {
-		log.error("Failed to getInfo from Database");
-	}
-		return null;
-	}	
-	
-	@Override
-	public AccountInfo createAccount(AccountInfo info) {
 		
-		String sql = "select user_id from bank_user where username=?";
-		User user =null;
+		
+		String sql = "select * from account_info where username= ?";
+		AccountInfo info = null;
 		try {
 			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, user.getUsername());
-			ResultSet rs= stmt.executeQuery();
-			while(rs.next()) {
-				info.setUsername("user_id");
+			stmt.setString(1, username);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				log.info("User is present in DB");
+				info = new AccountInfo();
+				info.setUsername(rs.getString("username"));
+				info.setTotalBalance(rs.getDouble("total"));
+				System.out.println("Username:"+ info.getUsername());
+				System.out.println("Total Balance:" + info.getTotalBalance());
+				System.out.println("AccountType:" + rs.getString("accounttype"));
 			}
-		}catch(SQLException e) {
-			log.error("Error in createAccount Method ");
-			e.printStackTrace();
+		} catch (SQLException e) {
+			log.error("Failed to getInfo from Database");
 		}
-		
+		return info;
+	}
+
+	@Override
+	public AccountInfo createAccount(AccountInfo info) {
+		String sql = "insert into account_info (total,accounttype,username) values (?,?,?)";
+		log.info("Checking Account created for:" + info.getUsername());
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setDouble(1, 0.0);
+			stmt.setString(2, "Checking");
+			stmt.setString(3, info.getUsername());
+			stmt.execute();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			log.info("Couldn't createAccount ");
+		}
+
 		return info;
 	}
 
@@ -90,8 +95,5 @@ public class AccountInfoDaoPostgres implements AccountInfoDao {
 		// TODO Auto-generated method stub
 
 	}
-
-	
-
 
 }

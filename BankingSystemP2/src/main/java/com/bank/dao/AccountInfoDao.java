@@ -2,6 +2,7 @@ package com.bank.dao;
 
 import com.bank.exception.UserNotFound;
 import com.bank.pojo.AccountInfo;
+import com.bank.pojo.User;
 
 public interface AccountInfoDao {
 

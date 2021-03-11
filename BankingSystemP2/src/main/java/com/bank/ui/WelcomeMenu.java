@@ -10,6 +10,7 @@ public class WelcomeMenu implements Menu {
 	private Menu nextMenu;
 	private Menu accountMenu;
 	private Menu depositMenu;
+	private Menu accountSummaryMenu;
 
 	public WelcomeMenu() {
 		// TODO Auto-generated constructor stub
@@ -61,12 +62,13 @@ public class WelcomeMenu implements Menu {
 		
 
 	}
-	public WelcomeMenu(Menu loginMenu,Menu registrationMenu,Menu depositMenu,Menu accountMenu) {
+	public WelcomeMenu(Menu loginMenu,Menu registrationMenu,Menu depositMenu,Menu accountMenu,Menu accountSummaryMenu) {
 		super();
 		this.loginMenu= loginMenu;
 		this.registrationMenu = registrationMenu;
 		this.depositMenu = depositMenu;
 		this.accountMenu = accountMenu;
+		this.accountSummaryMenu = accountSummaryMenu;
 		
 	}
 

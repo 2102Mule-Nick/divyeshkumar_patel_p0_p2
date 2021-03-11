@@ -8,6 +8,7 @@ public class AccountMenu implements Menu {
 	private Menu loginMenu;
 	private Menu withdrawMenu;
 	private Menu depositMenu;
+	private Menu accountSummaryMenu;
 
 	public AccountMenu() {
 		// TODO Auto-generated constructor stub
@@ -35,7 +36,7 @@ public class AccountMenu implements Menu {
 		System.out.println("Please enter a choice");
 		String answer = scan.nextLine();
 		if ("1".equals(answer)) {
-
+			nextMenu = accountSummaryMenu;
 		} else if ("2".equals(answer)) {
 			nextMenu = depositMenu;
 		}
@@ -59,16 +60,23 @@ public class AccountMenu implements Menu {
 		// TODO Auto-generated method stub
 		this.scan = scan;
 	}
+
 	public AccountMenu(Menu depositMenu) {
 		super();
 		this.depositMenu = depositMenu;
 	}
+	public AccountMenu(Menu depositMenu, Menu accountSummaryMenu) {
+	super();
+	this.depositMenu=depositMenu;
+	this.accountSummaryMenu=accountSummaryMenu;
+	}
 
-	public AccountMenu( Menu loginMenu, Menu withdrawMenu, Menu depositMenu) {
+	public AccountMenu(Menu loginMenu, Menu withdrawMenu, Menu depositMenu,Menu acccountSummaryMenu) {
 		super();
 		this.loginMenu = loginMenu;
 		this.withdrawMenu = withdrawMenu;
 		this.depositMenu = depositMenu;
+		this.accountSummaryMenu = acccountSummaryMenu;
 	}
 
 }

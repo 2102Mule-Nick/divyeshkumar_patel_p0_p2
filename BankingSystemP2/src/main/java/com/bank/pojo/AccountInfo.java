@@ -3,8 +3,17 @@ package com.bank.pojo;
 public class AccountInfo {
 
 	private String username;
-	private int totalBalance;
+	private double totalBalance;
 	private String transactionRemarks;
+	private String accountType;
+
+	public String getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
 
 	public String getUsername() {
 		return username;
@@ -14,12 +23,12 @@ public class AccountInfo {
 		this.username = username;
 	}
 
-	public int getTotalBalance() {
+	public double getTotalBalance() {
 		return totalBalance;
 	}
 
-	public void setTotalBalance(int balance) {
-		if (balance > 0) {
+	public void setTotalBalance(double balance) {
+		if (balance > 0.0) {
 			this.totalBalance = balance;
 		}
 	}
@@ -38,7 +47,7 @@ public class AccountInfo {
 		//this("Test", 200000, "Total amount in bank");
 	}
 
-	public AccountInfo(String username, int balance,String remarks) {
+	public AccountInfo(String username, double balance,String remarks) {
 		super();
 		this.username = username;
 		this.totalBalance = balance;
