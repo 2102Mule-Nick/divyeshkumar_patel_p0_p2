@@ -44,7 +44,7 @@ public class AccountInfoDaoPostgres implements AccountInfoDao {
 	public AccountInfo getInfo(String username) throws UserNotFound {
 		
 		
-		String sql = "select * from account_info where username= ?";
+		String sql = "select bu.firstname,bu.lastname,ai.username,ai.total,ai.accounttype from account_info ai,bank_user bu where ai.username = bu.username and ai.username= ?";
 		AccountInfo info = null;
 		try {
 			stmt = conn.prepareStatement(sql);
@@ -55,27 +55,44 @@ public class AccountInfoDaoPostgres implements AccountInfoDao {
 				info = new AccountInfo();
 				info.setUsername(rs.getString("username"));
 				info.setTotalBalance(rs.getDouble("total"));
+				System.out.println("=======================");
+				System.out.println("First Name:"+rs.getString("firstname"));
+				System.out.println("Last Name:"+ rs.getString("lastname"));
 				System.out.println("Username:"+ info.getUsername());
 				System.out.println("Total Balance:" + info.getTotalBalance());
 				System.out.println("AccountType:" + rs.getString("accounttype"));
 			}
 		} catch (SQLException e) {
 			log.error("Failed to getInfo from Database");
+			e.printStackTrace();
 		}
 		return info;
 	}
 
 	@Override
 	public AccountInfo createAccount(AccountInfo info) {
-		String sql = "insert into account_info (total,accounttype,username) values (?,?,?)";
+		String sql1="select nextval('account_id_seq')";
+		int acc_id=0;;
+		try {
+			stmt= conn.prepareStatement(sql1);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				acc_id= rs.getInt("nextval");
+			}
+		}catch(SQLException e) {
+			
+		}
+		
+		String sql = "insert into account_info (account_id,total,accounttype,username) values (?,?,?,?)";
 		log.info("Checking Account created for:" + info.getUsername());
 		try {
 			stmt = conn.prepareStatement(sql);
-			stmt.setDouble(1, 0.0);
-			stmt.setString(2, "Checking");
-			stmt.setString(3, info.getUsername());
+			stmt.setInt(1, acc_id);
+			stmt.setDouble(2, 0.0);
+			stmt.setString(3, "Checking");
+			stmt.setString(4, info.getUsername());
 			stmt.execute();
-			stmt.close();
+			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			log.info("Couldn't createAccount ");
@@ -85,15 +102,22 @@ public class AccountInfoDaoPostgres implements AccountInfoDao {
 	}
 
 	@Override
-	public void updateInfo(AccountInfo info) {
+	public void withdrawAmt(AccountInfo info) {
 		// TODO Auto-generated method stub
+		System.out.println("withdrawAmt - AccountInfoDaoPostgres");
+		String sql = "update account_info set total = total - ? where username =?";
+		log.trace("You have successfully withdrawn money from your account ");
 
-	}
-
-	@Override
-	public void deleteInfo(AccountInfo info) {
-		// TODO Auto-generated method stub
-
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setDouble(1, info.getTotalBalance());
+			stmt.setString(2, info.getUsername());
+			stmt.execute();
+			conn.close();
+		} catch (SQLException e) {
+			log.info("Couldn't withdraw money from your account");
+			e.printStackTrace();
+		}
 	}
 
 }

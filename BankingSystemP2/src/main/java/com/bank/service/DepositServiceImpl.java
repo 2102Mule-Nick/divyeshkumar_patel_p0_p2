@@ -22,6 +22,7 @@ public class DepositServiceImpl implements DepositService {
 
 	@Override
 	public AccountInfo depositAmt(AccountInfo info) throws InvalidPassword, UserNotFound {
+		//Service to deposit money into the account
 		try{
 			accountInfoDao.depositInfo(info);
 		}catch(UserNotFound e) {

@@ -16,7 +16,7 @@ public User authenticateUser(User user) throws InvalidPassword, UserNotFound;
 public AccountInfo checkAccount(AccountInfo info);
 public User registerUser(User user) throws UserNameTaken;
 
-public User updateUser(User user, String password);
+public boolean updateUser(User user, String new_password) throws UserNotFound,InvalidPassword;
 
-public boolean removeUser(User user);
+public boolean removeUser(User user) throws UserNotFound, InvalidPassword;
 }

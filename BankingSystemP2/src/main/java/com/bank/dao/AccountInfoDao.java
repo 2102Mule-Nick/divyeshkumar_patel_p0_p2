@@ -9,6 +9,5 @@ public interface AccountInfoDao {
 	public void depositInfo(AccountInfo info) throws UserNotFound;
 	public AccountInfo getInfo(String username) throws UserNotFound;
 	public AccountInfo createAccount(AccountInfo info);
-	public void updateInfo(AccountInfo info);
-	public void deleteInfo(AccountInfo info);
+	public void withdrawAmt(AccountInfo info) throws UserNotFound;
 }

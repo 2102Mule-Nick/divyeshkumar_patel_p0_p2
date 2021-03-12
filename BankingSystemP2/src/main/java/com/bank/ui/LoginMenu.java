@@ -11,7 +11,7 @@ import com.bank.service.AuthService;
 
 public class LoginMenu implements Menu{
 	
-	private Logger log = Logger.getRootLogger();
+	private Logger loginLog = Logger.getRootLogger();
 	private AuthService authService;
 	private Scanner scan;
 	private Menu nextMenu;
@@ -41,13 +41,14 @@ public class LoginMenu implements Menu{
 		User user = new User(username, password);
 		try {
 			authService.authenticateUser(user);
-			log.info("User has logged in");
+			loginLog.info("User has logged in");
 			System.out.println("-=-=-=-=-=-=-=-=-=-=");
 			nextMenu = accountMenu;
 			
 		} catch (InvalidPassword e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Incorrect Password - Please try again");
+			nextMenu = this;
 		} catch (UserNotFound e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

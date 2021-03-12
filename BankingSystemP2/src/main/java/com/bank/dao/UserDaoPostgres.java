@@ -72,6 +72,7 @@ public class UserDaoPostgres implements UserDao {
 
 	@Override
 	public void updateUser(User user, String new_password) {
+		
 		 String sql = "update bank_user set pass_word = ? where username =? and pass_word = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
@@ -80,7 +81,7 @@ public class UserDaoPostgres implements UserDao {
 			stmt.setString(3, user.getPassword());
 			stmt.execute();
 			conn.close();
-			log.info("The information has been updated");
+			log.info("updateUser - UserDaoPostgres - The password has been updated");
 		} catch (SQLException e) {
 			log.info("Unable to update");
 		}
@@ -89,12 +90,12 @@ public class UserDaoPostgres implements UserDao {
 
 	@Override
 	public void removeUser(User user) {
-		String sql = "delete from bank_user where username = ? and password = ?";
+		String sql = "delete from account_info where username = ? and pass_word = ? cascade";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, user.getUsername());
-			stmt.setString(1, user.getPassword());
-			stmt.executeUpdate();
+			stmt.setString(2, user.getPassword());
+			stmt.execute();
 			conn.close();
 			log.warn("User deleted!!!");
 		} catch (SQLException e) {
@@ -102,10 +103,5 @@ public class UserDaoPostgres implements UserDao {
 		}
 	}
 
-	@Override
-	public void updateUser(User user) {
-		// TODO Auto-generated method stub
-
-	}
 
 }

@@ -63,17 +63,32 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public User updateUser(User user, String password) {
+	public boolean updateUser(User user, String new_password) {
 		log.info("Update User Method");
-		userDao.updateUser(user,password);
-		return null;
+		try {
+			userDao.updateUser(user,new_password) ;
+			return true;
+		} catch (UserNotFound e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidPassword e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	@Override
-	public boolean removeUser(User user) {
+	public boolean removeUser(User user)  {
 		if(existingUser(user)) {
-			userDao.removeUser(user);
-			return true;
+			try {
+				userDao.removeUser(user);
+				return true;
+			} catch (UserNotFound | InvalidPassword e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 		}
 		return false;
 	}

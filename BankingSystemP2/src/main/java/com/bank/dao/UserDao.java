@@ -14,10 +14,11 @@ public interface UserDao {
 
 	public List<User> getAllUsers();
 
-	public void updateUser(User user, String new_password);
+	public void updateUser(User user, String new_password) throws UserNotFound,InvalidPassword;
 
-	public void removeUser(User user);
+	public void removeUser(User user) throws UserNotFound,InvalidPassword;
 
-	void updateUser(User user);
+
+	
 
 }
